@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { getDatasets } from '../api/api'
-import { DataBox } from './DataBox'
+import { DataBox } from './Components/DataBox'
+import { DataPane } from './DataPane'
+import { DataStatSimplified, transformData } from './helpers/transformData'
+
 
 
 const Dataset: React.FC = () => {
-  const [data, setData] = useState(null)
+  const [data, setData] = useState<DataStatSimplified>(null)
 
   // @ts-ignore
   useEffect(async () => {
     const resp = await getDatasets()
-    setData(resp)
+    const transformedData = transformData(resp)
+    setData(transformedData)
   }, [])
 
-  return (
-    <DataBox title='Data sets' fontSize={2}>
-      {JSON.stringify(data, null, 2)}
-    </DataBox>
+  return data ? <DataPane {...data}  /> : (
+    <DataBox title='Loading data...' />
   )
 }
 

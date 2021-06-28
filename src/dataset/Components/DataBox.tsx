@@ -3,11 +3,10 @@ import styled from 'styled-components'
 
 // $ means that the prop will be filtered from DOM
 // https://styled-components.com/docs/api#transient-props
-type LegendSize = { $fontSize: number }
+type LegendSize = { $fontScale: number }
 const Legend = styled.div<LegendSize>`
-  font-size: ${({ $fontSize = 1 }: LegendSize) => String($fontSize)}em;
+  font-size: ${({ $fontScale }: LegendSize) => String(2 * $fontScale)}em;
   text-align: center;
-  
 `
 
 const Box = styled.div`
@@ -16,18 +15,18 @@ const Box = styled.div`
   padding: 10px;
 `
 
-type Props =  React.PropsWithChildren<{
+type Props = React.PropsWithChildren<{
   title: string
-  fontSize?: number
+  fontScale?: number
 }>
 
 export const DataBox = ({
   title,
-  fontSize = 1,
+  fontScale = 1, // 2em
   children,
 }: Props) => (
   <Box>
-    <Legend $fontSize={fontSize}>{title}</Legend>
+    <Legend $fontScale={fontScale}>{title}</Legend>
     {children}
   </Box>
 )
