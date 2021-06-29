@@ -1,11 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
 import { DataBox } from './Components/DataBox'
-import { DataPie } from './Details/DataPie'
-import { KeyValues } from './Details/KeyValues'
-import { DataStatSimplified } from './helpers/transformData'
+import { DataPie } from './Components/DataPie'
+import { KeyValues } from './Components/KeyValues'
+import {
+  CategoriesData,
+  SimplifiedData,
+  StatsData,
+} from './helpers/transformData'
 
-type Props = DataStatSimplified & {
+type Props = StatsData & {
   fontScale?: number
 }
 
@@ -16,14 +20,103 @@ const Flex = styled.div`
   justify-content: center;
 `
 
-export const DataPane = ({ fontScale = 1, detailedName, details }: Props) => (
-  <DataBox fontScale={fontScale} title={detailedName}>
+const FlexSpaceBetween = styled(Flex)`
+  justify-content: center;
+`
+
+const Spacer = styled.div`
+  height: 2em;
+`
+
+const Subtitle = styled.h2`
+  padding: 5px;
+`
+
+const CoutersMap = {
+  nullCount: 'Null',
+  distinctCount: 'Distinct',
+  duplicateCount: 'Duplicate',
+  totalCount: 'Total',
+}
+
+const keys = ['nullCount', 'distinctCount', 'duplicateCount', 'totalCount']
+
+const RenderCategories = ({
+  categories,
+  title,
+}: {
+  title: string
+  categories: CategoriesData[]
+}) => {
+  if (!categories.length) {
+    return null
+  }
+  const piesData = keys.map((key) => ({
+    key,
+    data: categories.map(
+      ({ name, [key as keyof CategoriesData]: value }): SimplifiedData => ({
+        name,
+        value: value as number,
+      })
+    ),
+  }))
+
+  const mergedPieData = categories.map(({ name, detailedName, ...rest }) => ({
+    key: [name, detailedName].join(' - '),
+    name: detailedName ?? name,
+    data: keys.map((key) => ({
+      name: CoutersMap[key],
+      value: rest[key],
+    })),
+  }))
+
+  return (
+    <>
+      <Subtitle>{title}</Subtitle>
+      <FlexSpaceBetween>
+        {mergedPieData.map(({ key, data }) => (
+          <DataBox fontScale={0.7} title={`${key}`}>
+            <Flex>
+              <DataPie data={data} />
+              <KeyValues data={data} />
+            </Flex>
+          </DataBox>
+        ))}
+      </FlexSpaceBetween>
+
+      {mergedPieData.length > 1 && (
+        <>
+          <Subtitle>{title} by type</Subtitle>
+          <FlexSpaceBetween>
+            {piesData.map(({ key, data }) => (
+              <DataBox fontScale={0.7} title={`${CoutersMap[key]} cells`}>
+                <Flex>
+                  <DataPie data={data} />
+                  <KeyValues data={data} />
+                </Flex>
+              </DataBox>
+            ))}
+          </FlexSpaceBetween>
+        </>
+      )}
+    </>
+  )
+}
+
+export const DataPane = ({ fontScale = 1, name, dataSets }: Props) => (
+  <DataBox fontScale={fontScale} title={name}>
     <Flex>
-      <DataPie details={details} />
-      <KeyValues details={details} />
-      {details.map((d) => (
-        <DataPane fontScale={fontScale * 0.9} {...d} />
-      ))}
+      <DataPie data={dataSets} />
+      <KeyValues data={dataSets} />
     </Flex>
+    {dataSets.map(({ detailedName, categories, keys }) => (
+      <>
+        <DataBox title={detailedName} fontScale={0.8}>
+          <RenderCategories categories={categories} title="Categories" />
+          <RenderCategories categories={keys} title="Keys" />
+        </DataBox>
+        <Spacer />
+      </>
+    ))}
   </DataBox>
 )

@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DataStatSimplified } from '../helpers/transformData'
+import { SimplifiedData } from '../helpers/transformData'
 
 const Div = styled.div`
   display: flex;
-  width: 250px;
+  width: 200px;
   flex-direction: column;
   justify-content: center;
   & > * {
@@ -12,11 +12,15 @@ const Div = styled.div`
   }
 `
 
-export const KeyValues = ({ details }: Pick<DataStatSimplified, 'details'>) => (
+type Props = {
+  data: SimplifiedData[]
+}
+
+export const KeyValues = ({ data }: Props) => (
   <Div>
-    {details.map(({ key, value }) => (
+    {data.map(({ name, value }) => (
       <div>
-        {key}: {value}
+        {name}: {value}
       </div>
     ))}
   </Div>

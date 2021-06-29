@@ -1,14 +1,18 @@
 import React from 'react'
 import { PieChart, Pie, ResponsiveContainer, Tooltip } from 'recharts'
-import { DataStatSimplified } from '../helpers/transformData'
+import { SimplifiedData, StatsData } from '../helpers/transformData'
 
-export const DataPie = ({ details }: Pick<DataStatSimplified, 'details'>) => (
-  <ResponsiveContainer width={250} height={250}>
+type Props = {
+  data: SimplifiedData[]
+}
+
+export const DataPie = ({ data }: Props) => (
+  <ResponsiveContainer width={150} height={150}>
     <PieChart>
       <Pie
-        data={details}
+        data={data}
         dataKey="value"
-        nameKey="key"
+        nameKey="name"
         cx="50%"
         cy="50%"
         fill="#8884d8"
