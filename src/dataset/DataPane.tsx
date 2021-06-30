@@ -41,7 +41,41 @@ const CoutersMap = {
 
 const keys = ['nullCount', 'distinctCount', 'duplicateCount', 'totalCount']
 
-const RenderCategories = ({
+type PieData = {
+  title: string
+  pies: {
+    key: string
+    data: SimplifiedData[]
+    mostCommon?: SimplifiedData[]
+  }[]
+}
+
+const PieSubgroup = ({ title, pies }: PieData) => (
+  <>
+    <Subtitle>{title}</Subtitle>
+    <FlexSpaceBetween>
+      {pies.map(({ key, data, mostCommon }) => (
+        <DataBox fontScale={0.7} title={`${key}`}>
+          <Flex>
+            <DataPie data={data} />
+            <KeyValues data={data} />
+          </Flex>
+          {mostCommon && (
+            <>
+              <Flex>
+                Render button
+                <DataPie data={mostCommon} />
+                <KeyValues data={mostCommon} />
+              </Flex>
+            </>
+          )}
+        </DataBox>
+      ))}
+    </FlexSpaceBetween>
+  </>
+)
+
+const PieGroup = ({
   categories,
   title,
 }: {
@@ -51,53 +85,37 @@ const RenderCategories = ({
   if (!categories.length) {
     return null
   }
+
+  const mergedPieData = categories.map(
+    ({ name, detailedName, mostCommon, ...rest }) => ({
+      mostCommon,
+      key: [name, detailedName].join(' - '),
+      data: keys.map((key) => ({
+        name: CoutersMap[key],
+        value: rest[key],
+      })),
+    })
+  )
+
   const piesData = keys.map((key) => ({
     key,
     data: categories.map(
-      ({ name, [key as keyof CategoriesData]: value }): SimplifiedData => ({
+      ({
+        name,
+        [key as keyof CategoriesData]: value,
+        mostCommon,
+      }): SimplifiedData => ({
         name,
         value: value as number,
       })
     ),
   }))
 
-  const mergedPieData = categories.map(({ name, detailedName, ...rest }) => ({
-    key: [name, detailedName].join(' - '),
-    name: detailedName ?? name,
-    data: keys.map((key) => ({
-      name: CoutersMap[key],
-      value: rest[key],
-    })),
-  }))
-
   return (
     <>
-      <Subtitle>{title}</Subtitle>
-      <FlexSpaceBetween>
-        {mergedPieData.map(({ key, data }) => (
-          <DataBox fontScale={0.7} title={`${key}`}>
-            <Flex>
-              <DataPie data={data} />
-              <KeyValues data={data} />
-            </Flex>
-          </DataBox>
-        ))}
-      </FlexSpaceBetween>
-
+      <PieSubgroup title={title} pies={mergedPieData} />
       {mergedPieData.length > 1 && (
-        <>
-          <Subtitle>{title} by type</Subtitle>
-          <FlexSpaceBetween>
-            {piesData.map(({ key, data }) => (
-              <DataBox fontScale={0.7} title={`${CoutersMap[key]} cells`}>
-                <Flex>
-                  <DataPie data={data} />
-                  <KeyValues data={data} />
-                </Flex>
-              </DataBox>
-            ))}
-          </FlexSpaceBetween>
-        </>
+        <PieSubgroup title={`${title} by type`} pies={piesData} />
       )}
     </>
   )
@@ -112,8 +130,8 @@ export const DataPane = ({ fontScale = 1, name, dataSets }: Props) => (
     {dataSets.map(({ detailedName, categories, keys }) => (
       <>
         <DataBox title={detailedName} fontScale={0.8}>
-          <RenderCategories categories={categories} title="Categories" />
-          <RenderCategories categories={keys} title="Keys" />
+          <PieGroup categories={categories} title="Categories" />
+          <PieGroup categories={keys} title="Keys" />
         </DataBox>
         <Spacer />
       </>
