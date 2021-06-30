@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getDatasets } from '../api/api'
 import { DataBox } from './Components/DataBox'
-import { DataPane } from './DataPane'
+import { DataPane } from './Components/DataPane'
 import { StatsData, transformData } from './helpers/transformData'
 
 
