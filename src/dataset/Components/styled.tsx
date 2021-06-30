@@ -6,6 +6,7 @@ export const Flex = styled.div`
   flex-direction: row;
   width: 100%;
   justify-content: center;
+  padding-top: 0.5em;
 `
 
 export const FlexSpaceBetween = styled(Flex)`

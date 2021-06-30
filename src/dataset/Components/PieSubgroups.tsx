@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import styled from 'styled-components'
 import { DataBox } from './DataBox'
 import { DataMap } from './DataMap'
 import { DataPie } from './DataPie'
@@ -17,8 +18,27 @@ type PiesData = {
   pies: PieData[]
 }
 
+const Button = styled.button`
+  display: inline-block;
+  text-align: center;
+  background: red;
+  color: white;
+  font-weight: bold;
+  padding: 0.5em;
+  line-height: 1;
+  border: 0;
+  border-radius: 1em;
+  position: relative;
+  min-width: 8.23em;
+  text-decoration: none;
+  font-size: 0.75rem;
+`
+
 const PieSubGroup = ({ name, data, mostCommon }: PieData) => {
   const [showCommon, setShowCommon] = useState(false)
+
+  const commonCount = mostCommon?.length ?? 0
+  const isCommonData = !!commonCount
 
   return (
     <DataBox fontScale={0.7} title={`${name}`}>
@@ -26,17 +46,25 @@ const PieSubGroup = ({ name, data, mostCommon }: PieData) => {
         <DataPie data={data} />
         <KeyValues data={data} />
       </Flex>
-      {!!mostCommon?.length && (
-        <button onClick={() => setShowCommon(!showCommon)}>
-          {showCommon ? 'Hide' : 'Show'} most common
-        </button>
-      )}
-      {mostCommon?.length > 3 && (
+
+      {isCommonData && (
         <>
-          Render button
-          <Flex>
-            <DataMap data={mostCommon} />
-          </Flex>
+          <Button onClick={() => setShowCommon(!showCommon)}>
+            {showCommon ? 'Hide' : 'Show'} most common
+          </Button>
+
+          {showCommon && (
+            <Flex>
+              {commonCount > 3 ? (
+                <DataMap data={mostCommon} />
+              ) : (
+                <>
+                  <DataPie data={mostCommon} />
+                  <KeyValues data={mostCommon} />
+                </>
+              )}
+            </Flex>
+          )}
         </>
       )}
     </DataBox>
@@ -44,7 +72,6 @@ const PieSubGroup = ({ name, data, mostCommon }: PieData) => {
 }
 
 export const PieSubgroups = ({ title, pies }: PiesData) => {
-
   return (
     <>
       <Subtitle>{title}</Subtitle>

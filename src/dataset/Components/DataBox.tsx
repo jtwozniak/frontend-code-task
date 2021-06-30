@@ -13,6 +13,7 @@ const Box = styled.div`
   border: 2px solid;
   border-radius: 10px;
   padding: 10px;
+  text-align: center;
 `
 
 type Props = React.PropsWithChildren<{
