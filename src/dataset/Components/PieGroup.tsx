@@ -1,6 +1,6 @@
 import React from 'react'
 import { CategoriesData, SimplifiedData } from '../helpers/transformData'
-import { PieSubgroup } from './PieSubgroup'
+import { PieSubgroups } from './PieSubgroups'
 
 const CoutersMap = {
   nullCount: 'Null',
@@ -25,7 +25,7 @@ export const PieGroup = ({
   const mergedPieData = categories.map(
     ({ name, detailedName, mostCommon, ...rest }) => ({
       mostCommon,
-      key: [name, detailedName].join(' - '),
+      name: [name, detailedName].filter(Boolean).join(' - '),
       data: keys.map((key) => ({
         name: CoutersMap[key],
         value: rest[key],
@@ -34,7 +34,7 @@ export const PieGroup = ({
   )
 
   const piesData = keys.map((key) => ({
-    key,
+    name: CoutersMap[key],
     data: categories.map(
       ({
         name,
@@ -49,9 +49,9 @@ export const PieGroup = ({
 
   return (
     <>
-      <PieSubgroup title={title} pies={mergedPieData} />
+      <PieSubgroups title={title} pies={mergedPieData} />
       {mergedPieData.length > 1 && (
-        <PieSubgroup title={`${title} by type`} pies={piesData} />
+        <PieSubgroups title={`${title} by type`} pies={piesData} />
       )}
     </>
   )
