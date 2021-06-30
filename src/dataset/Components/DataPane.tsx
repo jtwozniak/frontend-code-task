@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, Fragment } from 'react'
 import styled from 'styled-components'
 import { DataBox } from './DataBox'
 import { DataPie } from './DataPie'
@@ -43,15 +43,15 @@ export const DataPane = ({ fontScale = 1, name, dataSets }: Props) => {
         <Info>{'<== Click listed elements to see details'}</Info>
       </Flex>
       {dataSets.map(
-        ({ detailedName, categories, keys }, index) =>
+        ({ name, detailedName, categories, keys }, index) =>
           showSets[index] && (
-            <>
+            <Fragment key={name}>
               <DataBox key={detailedName} title={detailedName} fontScale={0.8}>
                 <PieGroup categories={categories} title="Categories" />
                 <PieGroup categories={keys} title="Keys" />
               </DataBox>
               <Spacer />
-            </>
+            </Fragment>
           )
       )}
     </DataBox>

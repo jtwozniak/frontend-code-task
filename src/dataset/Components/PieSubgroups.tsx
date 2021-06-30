@@ -76,8 +76,8 @@ export const PieSubgroups = ({ title, pies }: PiesData) => {
     <>
       <Subtitle>{title}</Subtitle>
       <FlexSpaceBetween>
-        {pies.map((pie) => (
-          <PieSubGroup {...pie} />
+        {pies.map((pie, index) => (
+          <PieSubGroup key={String(index)} {...pie} />
         ))}
       </FlexSpaceBetween>
     </>

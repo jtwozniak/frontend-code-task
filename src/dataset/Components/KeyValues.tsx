@@ -28,7 +28,7 @@ type Props = {
 export const KeyValues = ({ data }: Props) => (
   <Div>
     {data.map(({ name, value }) => (
-      <div>
+      <div key={name}>
         {name}: {value}{' '}
       </div>
     ))}
@@ -43,6 +43,7 @@ export const KeyValuesOnClick = ({
   <Div>
     {data.map(({ name, value }, index) => (
       <Label
+        key={name}
         onClick={() => changeVisibilityOfDataSet(index)}
         $bold={showSets[index]}
       >
