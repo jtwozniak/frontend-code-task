@@ -11,7 +11,7 @@ export type CategoriesData = {
   nullCount: number
   distinctCount: number
   duplicateCount: number
-  totalCount: number
+  // totalCount: number
   mostCommon: SimplifiedData[]
 }
 
@@ -33,14 +33,14 @@ const calculateCounters = (
   nullfraction: number,
   distinct: number
 ) => {
-  const nullCount = Math.floor(total * nullfraction)
+  const nullCount = Math.round(total * nullfraction)
   const distinctCount = distinct > 0 ? distinct : Math.floor(-distinct * total)
 
   return {
     nullCount,
     distinctCount,
     duplicateCount: total - nullCount - distinctCount,
-    totalCount: total,
+    // totalCount: total,
   }
 }
 
@@ -86,7 +86,7 @@ export const transformData = (apiData: Dataset[]): StatsData => {
               mostCommon: most_common.map(
                 ({ value: { text: name }, frequency }) => ({
                   name,
-                  value: frequency,
+                  value: Math.round(Number(stats.row_count) * frequency),
                 })
               ),
             })

@@ -6,10 +6,9 @@ const CoutersMap = {
   nullCount: 'Null',
   distinctCount: 'Distinct',
   duplicateCount: 'Duplicate',
-  totalCount: 'Total',
 }
 
-const keys = ['nullCount', 'distinctCount', 'duplicateCount', 'totalCount']
+const keys = ['nullCount', 'distinctCount', 'duplicateCount']
 
 export const PieGroup = ({
   categories,
@@ -39,7 +38,6 @@ export const PieGroup = ({
       ({
         name,
         [key as keyof CategoriesData]: value,
-        mostCommon,
       }): SimplifiedData => ({
         name,
         value: value as number,

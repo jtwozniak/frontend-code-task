@@ -21,7 +21,7 @@ type PiesData = {
 const Button = styled.button`
   display: inline-block;
   text-align: center;
-  background: red;
+  background: #e8204e;
   color: white;
   font-weight: bold;
   padding: 0.5em;

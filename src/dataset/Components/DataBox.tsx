@@ -12,7 +12,7 @@ const Legend = styled.div<LegendSize>`
 const Box = styled.div`
   border: 2px solid;
   border-radius: 10px;
-  padding: 10px;
+  padding: 20px;
   text-align: center;
 `
 
